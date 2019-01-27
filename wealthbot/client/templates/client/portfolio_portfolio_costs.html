@@ -1,0 +1,92 @@
+<div class="box-header shadow">
+    <h2>Your Costs</h2>
+</div>
+<div class="box-content shadow">
+    {% load humanize %}
+    {% if billing_spec is not None and billing_spec.type == billing_spec.TYPE_FLAT %}
+        
+        {% if billing_spec.fees.count > 0 %}
+
+            <table class="table ">
+                <thead>
+                    <tr>
+                        <th>Fee Amount:</th>
+                        {#<th colspan="2" class="center-text">Amount of Assets Managed:</th>#}
+                    </tr>
+                </thead>
+                    <tr>
+                        <td>$ {{ billing_spec.fees.0.fee_without_retirement | floatformat:0|intcomma }} / year</td>
+                    </tr>
+            </table>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="label label-important">Minimum Fee: ${{ ria_company_information.minimum_billing_fee|floatformat:2|intcomma }}</span>
+                </div>
+                {% if action == 'view_and_test' or ria_company_information.is_show_expected_costs %}
+                    <div class="col-md-6">
+                        <strong>Fund Expenses:</strong> {{ fund_expenses|floatformat:2 }}%/year <br/>
+                        {% if commissions %}
+                            <strong>Estimated Commissions:</strong> {{ commissions }} Per Trade (Estimate)
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+
+    {% else %}
+        
+        <table class="table">
+            <thead>
+            <tr>
+                <th width="30%">Fee Amount: {#code_v2: NOT DELETE THIS CODE #}{#(Without a Retirement Plan)#}</th>
+                {#code_v2: NOT DELETE THIS CODE #}
+                {#{% if is_allow_retirement_plan %}#}
+                {#<th>Fee (With a Retirement Plan)</th>#}
+                {#{% endif %}#}
+                <th> &nbsp; </th>
+                <th colspan="3" class="text-right">Amount of Assets Managed:</th>
+            </tr>
+            </thead>
+            <tbody>
+            
+            {% if billing_spec.fees %}
+                {% for tier in billing_spec.feeTier %}
+                    <tr>
+                        <td class="fee-value">{{tier.fee.fee_without_retirement_percent}}%</td>
+                        <td> &nbsp; </td>
+                        {#code_v2: NOT DELETE THIS CODE #}
+                        {#{% if is_allow_retirement_plan %}#}
+                        {#<td class="fee-value">{{ fee.fee_with_retirement }}</td>#}
+                        {#{% endif %}#}
+                        {% if tier.fee.tier_top == 1000000000000 %}
+                            <td class="tier-value">$ {{ tier.bottom|floatformat:2|intcomma }} </td>
+                            <td> + </td>
+                            <td> </td>
+                        {% else %}
+                            <td class="tier-value">$ {{ tier.bottom|floatformat:2|intcomma }} </td>
+                            <td> &#8211; </td>
+                            <td class="tier-value">$ {{ tier.fee.tier_top|floatformat:2|intcomma }} </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+
+        <div class="row">
+            <div class="col-md-6">
+                <span class="label label-important">Minimum Fee: ${{ ria_company_information.minimum_billing_fee|floatformat:2|intcomma }}</span>
+            </div>
+            {% if action == 'view_and_test' or ria_company_information.is_show_expected_costs %}
+                <div class="col-md-6">
+                    <strong>Fund Expenses:</strong> {{ fund_expenses|floatformat:2 }}%/year <br/>
+                    {% if commissions %}
+                        <strong>Estimated Commissions:</strong> {{ commissions }} Per Trade (Estimate)
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+    {% endif %}
+</div>

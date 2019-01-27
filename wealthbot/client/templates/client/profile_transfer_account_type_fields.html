@@ -1,0 +1,7 @@
+{% for type in types %}
+    <div>
+        <label class="checkbox" for="{{ type.id_for_label }}">
+            {{ type.tag }} {{ type.choice_label }}
+        </label>
+    </div>
+{% endfor %}

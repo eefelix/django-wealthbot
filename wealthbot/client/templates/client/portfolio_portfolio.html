@@ -1,0 +1,5 @@
+<div class="row">
+    {% include 'client/portfolio_portfolio_chart.html' with portfolio=portfolio_information.model model_entities=portfolio_information.modelEntities json_entities=portfolio_information.modelEntitiesAsJson client=client %}
+
+    {% include 'client/portfolio_portfolio_details.html' with ria_company_information=ria_company_information has_retirement_account=has_retirement_account portfolio_information=portfolio_information client=client action=action %}
+</div>

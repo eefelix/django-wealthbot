@@ -1,0 +1,54 @@
+<table class="{% block table_class %} table suggested-portfolio-finaccounts{% endblock %} shadow">
+    <thead>
+    <tr>
+        {% block table_head_first_column %}<th></th>{% endblock %}
+        <th>Activity</th>
+        <th>Account Type</th>
+        <th>Estimated Value:</th>
+        <th>Estimated Monthly Contributions:</th>
+        <th>Estimated Monthly Distributions:</th>
+
+        {% block sascache_column_head %}
+            <th>SAS Cash:</th>
+        {% endblock %}
+
+        {% block table_head_extended %}{% endblock %}
+
+        {% block table_head_actions_column %}
+            {% if client.hasApprovedPortfolio %}
+                <th></th>
+            {% endif %}
+        {% endblock %}
+    </tr>
+    </thead>
+    <tbody class="{% block table_body_class %}client-accounts-list{% endblock %}">
+    {% block table_body %}
+        {% for account in client_accounts %}
+            {% include 'ria/prospects_client_account_row.html' with client=client account=account index=forloop.counter with_edit=client.hasApprovedPortfolio %}
+        {% endfor %}
+    {% endblock %}
+
+    {% load humanize %}
+    <tr class="row-total">
+        {% block table_row_first_column %}<td colspan="3"></td>{% endblock %}
+        <td class="value"><strong>${{ total.value|floatformat:2|intcomma }}</strong></td>
+        <td class="monthly-contributions"><strong>${{ total.monthly_contributions | floatformat:2|intcomma }}</strong></td>
+        <td class="monthly-distributions"><strong>${{ total.monthly_distributions | floatformat:2|intcomma }}</strong></td>
+
+        {% block sascache_column_total %}
+            <td class="sas-cash"><strong>${{ total.sas_cash | floatformat:2|intcomma }}</strong></td>
+        {% endblock %}
+
+        {% block table_row_extended %}{% endblock %}
+
+        {% if client.hasApprovedPortfolio %}
+            <td></td>
+        {% endif %}
+    </tr>
+    </tbody>
+</table>
+
+{% block advanced_html %}
+    <div id="consolidated_accounts_list" class="consolidated-accounts-list"></div>
+    <div class="outside-funds-list" id="outside_funds_list"></div>
+{% endblock %}

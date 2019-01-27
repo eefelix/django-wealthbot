@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+{% block html_head %}
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <title>
+            {% block title %}
+            wealthbot.io
+            {% endblock %}
+	    </title>
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+	    {% block stylesheets %}
+            <link href="https://stackpath.bootstrapcdn.com/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet">
+            <!--link rel="stylesheet" href="/css/bootstrap.css">
+            <link rel="stylesheet" href="/css/bootstrap-theme.css"-->
+            <link rel="stylesheet" href="{% static '/css/styles.css'  %}">
+            <link rel="stylesheet" href="{% static '/css/jquery-ui-1.9.2.custom.min.css'  %}"/>
+	    {% endblock %}
+
+        <link rel="shortcut icon" href="{% static 'img/favicon.ico'  %}" />
+
+	</head>
+{% endblock %}
+
+{% block html_body %}
+	<body id="mainApp">
+	{% block headernav %}
+	{% endblock %}
+
+	{% block main_container %}
+		<div class="container-fluid">
+            {% block flash_messages %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                            <a class="close" data-dismiss="alert" href="#">&times;</a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endblock %}
+
+			{% block body %}{% endblock %}
+		</div>
+	{% endblock %}
+
+	{% block javascripts %}
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script type="text/javascript" src="{% static '/js/jquery-ui-1.9.2.custom.min.js'  %}"></script>
+        <script type="text/javascript" src="{% static '/js/jquery.form.js'  %}"></script>
+        <script type="text/javascript" src="{% static '/js/jquery.autoNumeric.js'  %}"></script>
+        <script type="text/javascript" src="{% static '/js/jquery.placeholder.min.js'  %}"></script>
+        <script type="text/javascript" src="{% static '/js/bootstrap.min.js'  %}"></script>
+        <script type="text/javascript" src="{% static '/js/typeahead.js'  %}"></script>
+        <script type="text/javascript" src="{% static '/js/custom.js'  %}"></script>
+		<script type="text/javascript">
+		  $(document).ready(function () {
+		    $("[rel=popover]").popover();
+		  });
+		</script>
+        <!--script src="{#{ asset('bundles/fosjsrouting/js/router.js') }#}"></script>
+        <script src="{#{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }#}"></script-->
+	{% endblock %}
+	</body>
+{% endblock %}
+</html>

@@ -1,0 +1,29 @@
+{% if form.monthly_contributions is not None %}
+    <div class="row">
+        <div class="form-group">
+            <label class="client-intake-step-three-label" for="{{ form.monthly_contributions.name }}">Estimated Monthly Contributions:</label>
+            <div >
+                {{ form.monthly_contributions.errors }}
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" id={{ form.monthly_contributions.id_for_label }} name={{ form.monthly_contributions.name }} required="required" class='input-medium auto-numeric' />
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% if form.monthly_distributions is not None %}
+    <div class="row">
+        <div class="form-group">
+            <label class="client-intake-step-three-label" for="{{   form.monthly_distributions.name }}">Estimated Monthly Distributions:</label>
+            <div >
+                {{ form.monthly_distributions.errors }}
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" id={{ form.monthly_distributions.id_for_label }}     name={{ form.monthly_distributions.name }} required="required" class='  input-medium auto-numeric' />
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

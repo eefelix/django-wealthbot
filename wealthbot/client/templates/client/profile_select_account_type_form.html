@@ -1,0 +1,16 @@
+<h4>Which type of account will you be opening?</h4>
+<form id="client_account_types_form" action="{% url 'rx_client_profile_show_deposit_account_form' %}" method="post" data-save="false">
+    {% csrf_token %}
+    <div class="form-group spec-rx">
+        {{ form.errors }}
+
+        <div id="{{ form.group_type.html_name }}">
+            {% if group == 'deposit_money' %}
+                {% include 'client/profile_deposit_account_type_fields.html' with types=form.group_type %}
+            {% elif group == 'financial_institution' %}
+                {% include 'client/profile_transfer_account_type_fields.html' with types=form.group_type %}
+            {% endif %}
+        </div>
+        {{ form.groups }}
+    </div>
+</form>

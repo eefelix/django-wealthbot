@@ -1,0 +1,64 @@
+{% extends 'user/layout.html' %}
+
+{% block fos_user_content %}
+{% load staticfiles %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            {% if ria_logo %}
+                <div class="logo-ce-login center-text"><img class="img-responsive" src="{% static ria_logo  %}" alt=""></div>
+            {% else %}
+                <div class="logo-ce-login center-text"><img class="img-responsive" src="{% static '/img/logo.png'  %}" alt=""></div>
+            {% endif %}
+        </div>
+        {% block login_content %}
+        <div class="col-md-4 form-container">
+            <form style="padding: 8px 8px" method="post" class="regRia-form">
+                {% csrf_token %}
+                <fieldset>
+                    <div class="form-group">
+                        <label for="username" class="required">Email Address:</label>
+                        {% if form.errors %}
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="controls">
+                            {{ form.username.error }}
+                            {{ form.username }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="control-label required">Password</label>
+                        {{ form.password.error }}
+                        {{ form.password }}
+                        <br />
+                        <div class="form-inline">
+                            <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                            <label for="remember_me">Remember me</label>
+                        </div>
+                    </div>
+
+                    <a href="#" id="forgot-password-button">Forgot your password?</a>
+
+                    <div class="form-group">
+                        <input class="btn btn-info" type="submit" id="_submit" name="_submit" value="Login" />
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        {% endblock %}
+    </div>
+</div>
+
+{% endblock fos_user_content %}

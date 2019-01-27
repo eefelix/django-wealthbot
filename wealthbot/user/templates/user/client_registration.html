@@ -1,0 +1,67 @@
+{% extends 'user/layout.html' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-5 col-md-offset-1">
+            <div class="login-box-client">
+                <form action="{% url 'rx_client_registration' ria.id %}" method="post" >
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    {{ form.first_name.errors }}
+                                    {{ form.first_name }}
+                                </div>
+                                <div class="col-md-5 margin-left-0">
+                                    {{ form.last_name.errors }}
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        {{ form.email.errors }}
+                        {{ form.email }}
+                    </div>
+                    <div>
+                        {{ form.password1.errors }}
+                        {{ form.password1 }}
+                        <a class="pop" href="#" rel="popover" title="Password Complexity" data-content="<p>Your password must fufill the following requirements:</p>
+                                <ol>
+                                <li>At least 8 characters</li>
+                                <li>Not common</li>
+                                <li>Not entirely numeric</li>
+                                <li>Not similar to other info</li>
+                                </ol>
+                                ">
+                            <i class="mini-color mini-ico-info-sign"></i>
+                        </a>
+                    </div>
+                    <div>
+                        {{ form.password2.errors }}
+                        {{ form.password2 }}
+                    </div>
+                    <div class="accpet_checkbox">
+                        {{ form.is_accepted.errors }}
+                        {{ form.is_accepted }}
+                        <label for="wealthbot_userbundle_client_usertype_is_accepted" class="required client-agreements">
+                            By registering, you are agreeing to our <a href="#" target="_blank">Privacy Policy</a> and <a href="#" target="_blank">User Agreement</a>.
+                            You are also confirming you are asking to receive an ADV from <a href="#" target="_blank">{{ ria.riacompanyinformation.name }}</a>.
+                        </label>
+                    </div>
+                    {#{ form_rest(form) }#}
+                    <input class="btn btn-default"  type="submit" value="Register">
+                    <span style="vertical-align: super;" class="margin-left-15 fs10">
+                        or continue your registration by <a href="{% url 'fos_user_security_login' %}">logging in</a>.
+                    </span>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="login-box-company-logo">
+                <img src="{% url 'rx_file_download' ria.id %}" alt="">
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% for type in types %}
+    <div>
+        <label class="checkbox" for="{{ type.id_for_label }}">
+            {{ type.tag }}
+            {% if type.choice_label == 'Personal Account' %}
+                'Personal Investment Account'<br/>
+                <span class="descr-lbl">'A standard, taxable account.'</span>
+            {% elif type.choice_label == 'Joint Account' %}
+                'Joint Investment Account'<br/>
+                <span class="descr-lbl">'A taxable joint account with rights of survivorship.'</span>
+            {% elif type.choice_label == 'Roth IRA' %}
+                'Roth IRA'<br/>
+                <span class="descr-lbl">'A tax-free retirement account. Contributions are not tax-deductible.'</span>
+            {% elif type.choice_label == 'Traditional IRA' %}
+                'Traditional IRA'<br/>
+                <span class="descr-lbl">'A tax-deferred retirement account. Contributions may be tax-deductible.'</span>
+            {% else %}
+                {{ type.choice_label }}
+            {% endif %}
+        </label>
+    </div>
+{% endfor %}

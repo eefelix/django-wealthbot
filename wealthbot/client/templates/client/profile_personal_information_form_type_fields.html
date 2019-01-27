@@ -1,0 +1,97 @@
+<div class="form-title">
+    <h4>Personal Information</h4>
+    <hr/>
+</div>
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label" for="wealthbot_client_bundle_profile_type_first_name">First Name</label>
+            {{ form.first_name.errors }}
+            {{ form.first_name }}
+        </div>
+    </div>
+
+    {% comment %}
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="control-label" for="    wealthbot_client_bundle_profile_type_last_name">Middle Name</label>
+                {{ form.middle_name.errors }}
+                {{ form.middle_name }}
+            </div>
+        </div>
+    {% endcomment %}
+
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label" for="wealthbot_client_bundle_profile_type_last_name">Last Name</label>
+            {{ form.last_name.errors }}
+            {{ form.last_name }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group birthdate">
+            <label class="control-label required" for="wealthbot_client_bundle_profile_type_birth_date">Birth Date</label>
+            {{ form.birth_date.errors }}
+            {{ form.birth_date }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="control-label" for="wealthbot_client_bundle_profile_type_marital_status">Marital Status</label>
+            {{ form.marital_status.errors }}
+            {{ form.marital_status }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-7 spouse-field">
+        <div class="form-group spouse-fields-block" style="display:none;">
+            <div class="col-md-6">
+                <label for="wealthbot_client_bundle_profile_type_spouse_first_name">Spouse Name</label>
+            </div>
+            <div>
+                <div class="col-md-2">
+                    {{ subform.first_name.errors }}
+                    {{ subform.first_name }}
+                </div>
+                {% comment %}
+                    <div class="col-md-2">
+                        {{ subform.middle_name.errors }}
+                        {{ subform.middle_name }}
+                    </div>
+                {% endcomment %}
+                <div class="col-md-2">
+                    {{ subform.last_name.errors }}
+                    {{ subform.last_name }}
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label class="control-label" for="wealthbot_client_bundle_profile_type_spouse_birth_date">Spouse Date of Birth</label>
+                {{ subform.birth_date.errors }}
+                {{ subform.birth_date }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% comment %}
+    <div class="row" id="citizenship">
+        <div class="col-md-6">
+            <div class="form-group">
+                <span class="main-label"><label class="control-label" for="    wealthbot_client_bundle_profile_type_citizenship">Citizenship</label></span    >
+                <div class="controls">
+                    {{ form.citizenship.errors }}
+                    {{ form.citizenship }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endcomment %}

@@ -1,0 +1,15 @@
+{% extends 'client/profile_client_intake.html' %}
+
+{% block javascripts %}
+    {{ block.super }}
+    {% load staticfiles %}
+
+        <script src="{% static 'client/js/client.profile.js' %}"></script>
+        <script src="{% static 'client/js/client.accounts.js' %}"></script>
+        <script src="{% static 'client/js/client.portfolio.js' %}"></script>
+
+{% endblock %}
+
+{% block body %}
+    {% include 'client/profile_open_or_transfer_account.html' with form=form client=client ria_company_information=ria_company_information %}
+{% endblock %}

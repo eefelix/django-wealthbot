@@ -1,0 +1,16 @@
+{% extends 'ria/prospects_client_account_row.html' %}
+
+{% block sascache_column %}
+{% load humanize %}
+    {% if show_sas_cash %}
+        <td>${% block account_sascash_value %} {{ account.sasCashSum|floatformat:2|intcomma }}{% endblock %}</td>
+    {% endif %}
+{% endblock %}
+
+{% block see_consolidated_url %}
+    {% url 'rx_client_portfolio_consolidated_accounts' account_id=account.id %}
+{% endblock %}
+
+{% block see_investments_url %}
+    {% url 'rx_client_portfolio_outside_funds' account_id=account.id %}
+{% endblock %}

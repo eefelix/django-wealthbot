@@ -1,0 +1,51 @@
+{% if action == 'view_and_test' or ria_company_information.is_show_client_expected_asset_class %}
+
+    <div class="box col-md-6">
+        {% include 'client/portfolio_portfolio_costs.html' with ria_company_information=ria_company_information has_retirement_account=has_retirement_account fund_expenses=portfolio_information.fundExpenses fees=portfolio_information.fees commissions=portfolio_information.commissionsAsString action=action billing_spec=client.appointedBillingSpec %}
+    </div>
+
+    <div class="box col-md-6 suggested-portfolio-performance">
+        <div class="box-header shadow">
+            Performance
+        </div>
+        <div class="box-content shadow">
+            <table>
+                <tr>
+                    <td>
+                        <strong>Expected Asset Class Performance:</strong>
+                        <br>
+                        {% for entity in portfolio_information.modelEntities %}
+                             {{ entity.subclass.asset_class.name }}: {{ entity.subclass.expected_performance }}%<br/>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if portfolio_information.model.forecast %}
+                            <strong>Expected Return of Portfolio ({{ portfolio_information.model.forecast }} Years):</strong>
+                        {% elif action != 'client_portfolio' %}
+                            <strong>Expected Return of Portfolio ({{ portfolio_information.model.forecast }} Years):</strong>
+                        {% endif %}
+                        <br>
+                        {% if portfolio_information.generousInvestmentMarket %}
+                            Generous Investment Market: {{ portfolio_information.generousInvestmentMarket|floatformat:2 }}%
+                            <br/>
+                        {% elif action != 'client_portfolio' and action != 'client_approve_portfolio' %}
+                            Generous Investment Market: {{ portfolio_information.generousInvestmentMarket|floatformat:2 }}%
+                            <br/>
+                        {% endif %}
+                        Average Investment Market: {{ portfolio_information.averageInvestmentMarket|floatformat:2 }}%
+                        <br/>
+                        {% if portfolio_information.lowInvestmentMarket %}
+                            Low Investment Market: {{ portfolio_information.lowInvestmentMarket|floatformat:2 }}%
+                        {% elif action != 'client_portfolio' and action != 'client_approve_portfolio' %}
+                            Low Investment Market: {{ portfolio_information.lowInvestmentMarket|floatformat:2 }}%
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <div class="box col-md-6">
+        {% include 'client/portfolio_portfolio_costs.html' with ria_company_information=ria_company_information has_retirement_account=has_retirement_account fund_expenses=portfolio_information.fundExpenses fees=portfolio_information.fees commissions=portfolio_information.commissionsAsString billing_spec=billing_spec %}
+    </div>
+{% endif %}

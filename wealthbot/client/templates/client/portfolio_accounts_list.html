@@ -1,0 +1,22 @@
+{% extends 'ria/prospects_client_account_list.html' %}
+
+{% block table_class %}table table-condensed suggested-portfolio-finaccounts transfer-accounts-table{% endblock %}
+
+{% block sascache_column_head %}
+    {% if show_sas_cash %}
+        <th>SAS Cash:</th>
+    {% endif %}
+{% endblock %}
+
+{% block sascache_column_total %}
+    {% load humanize %}
+    {% if show_sas_cash %}
+        <td class="sas-cash"><strong>${{ total.sas_cash|floatformat:2|intcomma }}</strong></td>
+    {% endif %}
+{% endblock %}
+
+{% block table_body %}
+    {% for account in client_accounts %}
+        {% include 'client/portfolio_accounts_list_row.html' with client=client account=account index=forloop.counter with_edit=False show_sas_cash=show_sas_cash %}
+    {% endfor %}
+{% endblock %}

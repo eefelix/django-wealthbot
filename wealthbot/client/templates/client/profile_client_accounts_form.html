@@ -1,0 +1,109 @@
+{% if title_message %}
+    <h4>{{ title_message }}</h4>
+{% endif %}
+
+<form id="client_account_form" action="{% url "rx_client_profile_create_account" group %}" method="post" class="form-horizontal">
+    {% csrf_token %}
+    {{ form.errors }}
+    {% if form.financial_institution %}
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-9 col-md-offset-3">
+                    <div>{{ form.financial_institution.errors }}</div>
+                    {% if form.transferInformation %}
+                        <div>{{ form.transferInformation.transfer_custodian_id.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <label class="client-intake-step-three-label" for="{{ form.financial_institution.name }}">{{ form.financial_institution.label }}</label>
+                <div >
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% if form.transferInformation %}
+                                <input type="text" id={{ form.financial_institution.id_for_label }} name={{ form.financial_institution.name }} required="required" class='input-xlarge fin-inst-typeahead ajaxed typeahead' data-complete-url={% url 'rx_complete_transfer_custodian' %} data-update-url={% url 'rx_client_update_transfer_information' %} autocomplete='off' />
+                            {% else %}
+                                {{ form.financial_institution }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if form.transferInformation %}
+                        <div class="row">
+                            <div class="col-md-9">
+                                {{ form.transferInformation.is_firm_not_appear.errors }}
+                                <label class="checkbox" for="{{ form.transferInformation.is_firm_not_appear.id_for_label }}">
+                                    {{ form.transferInformation.is_firm_not_appear }}
+                                    <span class="help-block">The name of the firm does not appear in the available choices.</span>
+                                </label>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if form.plan_provider %}
+        <div class="form-group">
+            <label class="control-label client-intake-step-three-label" for="{{ form.plan_provider.name }}">{{ form.plan_provider.label }}</label>
+            <div class="controls">
+                {{ form.plan_provider.errors }}
+                {{ form.plan_provider }}
+                <div class="input-examples"><b>Examples</b>: Vanguard, Fidelity, Schwab</div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if form.groupType not in form.hidden_fields %}
+    <div class="form-group">
+        <label class="client-intake-step-three-label" for="{{ form.groupType.name }}">'Account Type:'</label>
+        <div>
+            {{ form.groupType.errors }}
+            {{ form.groupType }}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="form-group">
+        {{ form.value.errors }}
+        <div class="row">
+            <label class="client-intake-step-three-label" for="{{ form.value.name }}">Estimated Value:</label>
+            <div >
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" id={{ form.value.id_for_label }} name={{ form.value.name }} required="required" class='input-medium auto-numeric' />
+                </div>
+                <span class="retirement-value-help" style="display:none;">Minimum value must be $50,000 for retirement plans.</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="contribution_distribution_fields">
+        {% if form.contribution_type %}
+            {% spaceless %}
+                <strong>
+                    {% if group == 'employer_retirement' %}
+                        Will you be making contributions to this account?
+                    {% else %}
+                        Will you be making contributions or withdrawing money from the account?
+                    {% endif %}
+                </strong>
+            {% endspaceless %}
+
+            {{ form.contribution_type.errors }}
+            <div class="contribution-type-choices" data-url="{% url 'rx_client_profile_update_account_form' group %}">
+                {% for child in form.contribution_type %}
+                    <div class="col-md-3">
+                        <label class="radio" for="{{ child.id_for_label }}">{{ child }} {{ child.label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% include 'client/profile_client_accounts_form_fields.html' with form=form %}
+        {% endif %}
+    </div>
+
+    {% if hide_submit_button is None %}
+    <input class="btn btn-default"  type="submit" name="submit" value="Add"/>
+    {% endif %}
+</form>

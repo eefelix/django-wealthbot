@@ -1,0 +1,91 @@
+{% if client.clientAccounts.count > 0 %}
+
+    {% comment %}
+        {% if is_transfer is defined and is_transfer %}
+            {% set is_transfer = true %}
+        {% else %}
+            {% set is_transfer = false %}
+        {% endif %}
+    {% endcomment %}
+    <table class="table suggested-portfolio-finaccounts shadow">
+        <thead>
+        <tr>
+            <th></th>
+            {% if is_transfer %}
+                <th>Status</th>
+            {% endif %}
+            <th>Activity</th>
+            <th>Account Type</th>
+            <th>Estimated Value:</th>
+            <th>Estimated Monthly Contributions:</th>
+            <th>Estimated Monthly Distributions:</th>
+            {% if show_action_btn %}
+                <th></th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody class="accounts-list">
+
+        {% load humanize %}
+        {% for account in client.clientAccounts.all %}
+            <tr data-account-row="{{ account.pk }}" class="account-row-{{ account.pk }}">
+                {% with group=account.groupType.group.name type=account.groupType.type.name %}
+
+                    <td><strong>{{ forloop.counter }}.</strong></td>
+    
+                    {% if is_transfer %}
+                        <td>
+                            <a href="{% url 'rx_client_transfer_account' account_id %}" class="op-frm">{{ account.process }}</a>
+                        </td>
+                    {% endif %}
+    
+                    <td>{{ account.activity }}</td>
+                    <td>
+                        {% comment %}
+                            {% if (group == 'old_employer_retirement' or group ==       'financial_institution') %}
+                                {% set employer_name = account.financialInstitution %}
+                            {% elseif group == 'employer_retirement' %}
+                                {% set employer_financial_institurion =         account.financialInstitution | split('(') %}
+                                {% set employer_name = employer_financial_institurion[1]    |  trim(' )') %}
+                            {% else %}
+                                {% set employer_name = null %}
+                            {% endif %}
+        
+                            {{ account.ownersAsString }} {{ employer_name ? (   employer_name ~    ' ' ~ type) : type }}
+                            {% if group == 'employer_retirement' %}
+                                <br/>
+                                <sup><a class="see-investments-btn" data-url="{{        path('rx_client_portfolio_outside_funds',   {'account_id':   account.id}) }}" href="javascript:void(0)    ">(See investments ▲)    </a></sup>
+                            {% endif %}
+                        {% endcomment %}
+                        {{ client.profile.first_name }} {{ type }}
+                    </td>
+                    <td>${{ account.value|floatformat:2|intcomma }}</td>
+                    <td>${{ account.monthly_contributions|floatformat:2|intcomma }}</td  >
+                    <td>${{ account.monthly_distributions|floatformat:2|intcomma }}</td  >
+                    {% if show_action_btn %}
+                        <td>
+                            <a class="edit-account-btn" href="{% url 'rx_client_edit_account' account.pk %}">Edit</a>
+                            |
+                            <a class="remove-account-btn" href="{% url 'rx_client_delete_account' account.pk %}">Delete</a>
+                        </td>
+                    {% endif %}
+                {% endwith %}
+            </tr>
+        {% endfor %}
+
+        <tr class="row-total">
+            {% if is_transfer %}
+                <td colspan="4"></td>
+            {% else %}
+                <td colspan="3"></td>
+            {% endif %}
+            <td class="value"><strong>${{ total.value | floatformat:2|intcomma }}</strong></td>
+            <td class="monthly-contributions"><strong>${{ total.monthly_contributions | floatformat:2|intcomma }}</strong></td>
+            <td class="monthly-distributions"><strong>${{ total.monthly_distributions | floatformat:2|intcomma }}</strong></td>
+            {% if show_action_btn %}
+                <td></td>
+            {% endif %}
+        </tr>
+        </tbody>
+    </table>
+{% endif %}

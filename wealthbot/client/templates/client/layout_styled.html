@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block stylesheets %}
+
+    {{ block.super }}
+    {% load staticfiles %}
+    <link id="base-style-responsive" href="{% static '/css/theme-css/style.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block headernav %}
+{% endblock %}
+
+{% block body %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ block.super }}
+    {% load staticfiles %}
+
+    <script src="{% static '/js/theme-js/jquery.flot.min.js'  %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.pie.min.js'  %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.stack.js'  %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.resize.min.js'  %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.tooltip.min.js'  %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.crosshair.js'  %}"></script>
+    <script src="{% static '/js/theme-js/jquery.dataTables.min.js'  %}"></script>
+
+    {#<script src="/js/theme-js/custom.js"></script>#}
+{% endblock %}
