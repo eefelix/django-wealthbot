@@ -5,13 +5,14 @@ from client.models import ClientSettings, ClientAdditionalContact, ClientQuestio
 from client.models import AccountGroup, AccountType, AccountGroupType, ClientAccount
 from client.models import SystemAccount, ClientPortfolio
 from admin.models import BillingSpec, CeModel, CeModelEntity, AssetClass, Subclass
-from admin.models import Security, SecurityAssignment, SecurityType, Fee
+from admin.models import Security, SecurityAssignment, SecurityType, Fee, SecurityTransaction
 from ria.models import RiaCompanyInformation, RiskQuestion, RiskAnswer
 
 class CustomUserAdmin(UserAdmin):
-	fieldsets = UserAdmin.fieldsets + (
+    fieldsets = UserAdmin.fieldsets + (
             (None, {'fields': ('appointedBillingSpec',)}),
     )
+    list_display = ('pk', 'username', 'email')
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile)
@@ -37,4 +38,5 @@ admin.site.register(Subclass)
 admin.site.register(Security)
 admin.site.register(SecurityAssignment)
 admin.site.register(SecurityType)
+admin.site.register(SecurityTransaction)
 # Register your models here.

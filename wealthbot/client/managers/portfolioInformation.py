@@ -121,7 +121,9 @@ class PortfolioInformation(object):
 		elif self.model.owner.hasRole('ROLE_CLIENT'):
 			commissions = self.model.getCommissions()
 
-		print(commissions)
+		if commissions[0] == commissions[1]:
+			commissions[0] = 0
+			
 		resultStr = None
 		if commissions:
 			resultStr = '$' + "{:.2f}".format(commissions[0]) + ' - ' + '$' + "{:.2f}".format(commissions[1])

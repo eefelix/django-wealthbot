@@ -5,5 +5,6 @@ from .assetClass import *
 from .subclass import *
 from .securityType import *
 from .security import *
+from .securityTransaction import *
 from .securityAssignment import *
 from .fee import *

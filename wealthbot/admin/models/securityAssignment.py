@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Max, Min
+from admin.models import SecurityTransaction
 
 class SecurityAssignment(models.Model):
     class Meta:
@@ -20,8 +22,17 @@ class SecurityAssignment(models.Model):
 
     @classmethod
     def findMinAndMaxTransactionFeeForModel(cls, model):
-    	# Skip implementing transaction fee at this moment
-        minAndMax = []
-        minAndMax.append(0)
-        minAndMax.append(11)
+    	# Get the set of security assignments for particular model
+        security_assignments = SecurityAssignment.objects.filter(model=model)
+        security_transactions = SecurityTransaction.objects.filter(security_assignment__in=security_assignments)
+        minAndMax = {}
+        minAndMax['minimum'] = security_transactions.aggregate(Min('transaction_fee')).get('transaction_fee__min')
+        minAndMax['maximum'] = security_transactions.aggregate(Max('transaction_fee')).get('transaction_fee__max')
+
+        if minAndMax['minimum'] is None:
+            minAndMax['minimum'] = 0
+
+        if minAndMax['maximum'] is None or minAndMax['maximum'] < minAndMax['minimum']:
+            minAndMax['maximum'] = minAndMax['minimum']
+
         return minAndMax

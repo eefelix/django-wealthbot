@@ -22,6 +22,6 @@ class PortfolioInformationManager(object):
 
 		if model.owner.hasRole('ROLE_RIA'):
 			transactionCommissionFees = SecurityAssignment.findMinAndMaxTransactionFeeForModel(model=model.parent)
-			portfolioInformation.setTransactionCommissionFees(transactionCommissionFees=transactionCommissionFees)
+			portfolioInformation.setTransactionCommissionFees(transactionCommissionFees=[transactionCommissionFees['minimum'], transactionCommissionFees['maximum']])
 
 		return portfolioInformation
