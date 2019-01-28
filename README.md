@@ -1,5 +1,5 @@
-Wealthbot
-=========
+Django-Wealthbot
+================
 
 This is the django-ported of the Wealthbot.io system, originally written in
 PHP/Symfony. Currently, only the client on-boarding function has been ported.
