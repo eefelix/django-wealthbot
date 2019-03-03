@@ -1,6 +1,7 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
@@ -55,7 +56,7 @@ def registration(request, ria_id):
 			user.save()
 			# Create and assign the user profile
 			profile = Profile(user=user, first_name=form.cleaned_data['first_name'], 
-				last_name=form.cleaned_data['last_name'])
+				last_name=form.cleaned_data['last_name'], registration_step=0)
 			# Assign the RIA information
 			profile.ria_user = ria
 			profile.client_status = Profile.CLIENT_STATUS_PROSPECT
@@ -85,6 +86,7 @@ def registration(request, ria_id):
 	}
 	return render(request, 'user/client_registration.html', context)
 
+@login_required
 def redirectIfUserExist(user):
 	# Return the redirect label from the given registration_step
 	if hasattr(user, 'profile'):

@@ -1,10 +1,9 @@
 from django.db import models
-from user.models import User
 
 class ClientSettings(models.Model):
     class Meta:
     	db_table = 'client_settings'
-    client = models.OneToOneField(User, on_delete=models.CASCADE)
+    client = models.OneToOneField('user.User', on_delete=models.CASCADE)
     stop_tlh_value = models.FloatField(blank=True, null=True)
     CLIENT_TYPE_NEW = 'new'
     CLIENT_TYPE_CURRENT = 'current'

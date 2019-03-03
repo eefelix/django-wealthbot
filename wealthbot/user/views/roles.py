@@ -34,7 +34,7 @@ def afterLogin(request):
 	return redirect(redirectUrl)
 
 def getRouteForRia(user):
-	return 'rx_ria_company_profile'
+	return 'rx_ria_dashboard'
 
 def getRouteForClient(user, session):
 	# Check if session has stored redirectUrl

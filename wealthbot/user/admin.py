@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Profile, Role
+from .models import User, Profile, Role, GroupOwner
 from client.models import ClientSettings, ClientAdditionalContact, ClientQuestionnaireAnswer
 from client.models import AccountGroup, AccountType, AccountGroupType, ClientAccount
-from client.models import SystemAccount, ClientPortfolio
+from client.models import SystemAccount, ClientPortfolio, Activity
 from admin.models import BillingSpec, CeModel, CeModelEntity, AssetClass, Subclass
 from admin.models import Security, SecurityAssignment, SecurityType, Fee, SecurityTransaction
 from ria.models import RiaCompanyInformation, RiskQuestion, RiskAnswer
@@ -17,6 +17,7 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile)
 admin.site.register(Role)
+admin.site.register(GroupOwner)
 admin.site.register(ClientSettings)
 admin.site.register(ClientAdditionalContact)
 admin.site.register(BillingSpec)
@@ -39,4 +40,5 @@ admin.site.register(Security)
 admin.site.register(SecurityAssignment)
 admin.site.register(SecurityType)
 admin.site.register(SecurityTransaction)
+admin.site.register(Activity)
 # Register your models here.

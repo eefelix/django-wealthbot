@@ -1,0 +1,46 @@
+{% if form.financial_institution is not None %}
+    <div class="form-group">
+        <label for="{{ form.financial_institution.name }}"></label>
+        <div>
+            {{ form.financial_institution.errors }}
+            {% if form.transferInformation is not None %}
+                <input type="text" id={{ form.financial_institution.id_for_label }} name={{ form.financial_institution.name }} class='input-xlarge fin-inst-typeahead ajaxed' data-complete-url={% url 'rx_complete_transfer_custodian' %} data-update-url={% url 'rx_client_update_transfer_information' %} autocomplete='off' />
+
+                <div>
+                    {{ form.transferInformation.is_firm_not_appear.errors }}
+                    <label class="checkbox" for="{{ form.transferInformation.is_firm_not_appear.name }}">
+                        {{ form.transferInformation.is_firm_not_appear }}
+                        <span class="help-block">The name of the firm does not appear in the available choices.</span>
+                    </label>
+                </div>
+                <div>
+                    {{ form.transferInformation.transfer_custodian_id }}
+                </div>
+            {% else %}
+                {{ form.financial_institution }}
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+{% if form.plan_provider is not None %}
+    <div class="form-group">
+        <label for="{{ form.plan_provider.name }}"></label>
+        <div>
+            {{ form.plan_provider.errors }}
+            {{ form.plan_provider }}
+        </div>
+    </div>
+{% endif %}
+
+<div class="form-group">
+    {% if form.groupType.label is not None %}
+        <label for="{{ form.groupType.name }}">{{ form.groupType.label }}</label>
+    {% else %}
+        <label for="{{ form.groupType.name }}"></label>
+    {% endif %}
+    <div>
+        {{ form.groupType.errors }}
+        {{ form.groupType }}
+    </div>
+</div>

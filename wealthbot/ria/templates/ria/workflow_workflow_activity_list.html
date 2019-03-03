@@ -1,0 +1,60 @@
+<table class="table table-striped">
+    <thead>
+    <tr>
+        {% comment "Skip implementing sortable pagination at this moment" %}
+        <th>{{ knp_pagination_sortable(pagination, 'Client', 'lastName, firstName') }}</th>
+        <th>{{ knp_pagination_sortable(pagination, 'Date', 'createdAt') }}</th>
+        <th>{{ knp_pagination_sortable(pagination, 'Activity Summary', 'message') }}</th>
+        {% endcomment %}
+        <th>Client</th>
+        <th>Date</th>
+        <th>Activity Summary</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        {% if pagination.paginator.count > 0  %}
+            {% for activityItem in pagination %}
+                {% include 'ria/workflow_workflow_activity_item.html' with activityItem=activityItem %}
+            {% endfor %}
+        {% else %}
+            <tr class="empty"><td colspan="5">No activity.</td></tr>
+        {% endif %}
+    </tbody>
+</table>
+
+{% if show_pagination is None or show_pagination is True %}
+    <div class="ajax-pagination pagination pagination-centered">
+
+        {% if pagination.has_other_pages %}
+            <ul class="pagination">
+            {% if pagination.has_previous %}
+                <li><a href="?page={{ pagination.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in pagination.paginator.page_range %}
+                {% if pagination.number > 3 and forloop.first %}
+                    <li>1</li>
+                    <li class="disabled">⋯</li>
+                {% endif %}
+                {% if pagination.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span>      </li>
+                {% elif i > pagination.number|add:'-3' and i < pagination.number|add:'3' %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% if pagination.paginator.num_pages > pagination.number|add:'3' and forloop.last %}
+                    <li><span>⋯</span></li>
+                    <li><span>{{ pagination.paginator.num_pages }}</span></li>
+                {% endif %}
+            {% endfor %}
+            {% if pagination.has_next %}
+                <li><a href="?page={{ pagination.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+        {% endif %}
+
+    </div>
+{% endif %}

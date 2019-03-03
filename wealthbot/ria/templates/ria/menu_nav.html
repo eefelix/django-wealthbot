@@ -1,0 +1,16 @@
+{% load company_info %}
+{{ ria|companyInformation }}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="navbar navbar-default ria-nav">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Everything you want hidden at 940px or less, place within here -->
+                    {% load dashboard_menu %}
+                    {{ ria|dashboardMenu:request.path }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,139 @@
+{% extends 'ria/layout_themed.html' %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    {% load staticfiles %}
+
+    <link href="{% static '/css/bootstrap-glyphicons.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    {{ block.super }}
+    {% load staticfiles %}
+
+    <script src="{% static '/js/backbone.marionette/underscore.js' %}"></script>
+    <script src="{% static '/js/backbone.marionette/backbone.js' %}"></script>
+    <script src="{% static '/js/backbone.marionette/backbone.marionette.js' %}"></script>
+    <script type="text/javascript" src="{% static '/js/inputmask/jquery.inputmask.js' %}"></script>
+
+    <script src="{% static 'ria/js/ria.dashboard.clients.js' %}"></script>
+    <script src="{% static 'ria/js/ria.prospects.js' %}"></script>
+    <script src="{% static 'ria/js/ria.model.chart.js' %}"></script>
+    <script src="{% static 'ria/js/src/CollectionSorter.js' %}"></script>
+    <script src="{% static 'ria/js/src/fields.js' %}"></script>
+    <script src="{% static 'ria/js/ria.clients.marionette.js' %}"></script>
+    <script src="{% static 'client/js/client.profile.js' %}"></script>
+    <script src="{% static 'client/js/client.accounts.js' %}"></script>
+    <script src="{% static 'client/js/client.portfolio.js' %}"></script>
+    <script src="{% static 'client/js/client.dashboard.js' %}"></script>
+    <script src="{% static 'client/js/client.transfer.js' %}"></script>
+    <script src="{% static 'client/js/client.dashboard.accountManagement.js' %}"></script>
+    <script src="{% static 'client/js/client.profile.step1.js' %}"></script>
+    <script src="{% static 'client/js/client.changeProfile.js' %}"></script>
+    <script src="{% static 'client/js/client.dashboard.gainlosses.js' %}"></script>
+    <script src="{% static 'client/js/client.dashboard.documents.js' %}"></script>
+    <script src="{% static 'client/js/client.billing.js' %}"></script>
+    <script src="{% static 'client/js/client.performance.js' %}"></script>
+
+    <script src="{% static '/js/theme-js/jquery.flot.min.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.pie.min.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.stack.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.resize.min.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.tooltip.min.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.crosshair.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.dataTables.min.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+
+    {% block ria_nav %}
+        {% include 'ria/menu_nav.html' with ria=ria %}
+    {% endblock %}
+
+    <h3>Clients</h3>
+
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+            {% if activeTab == 'clients' %}
+                <li class='active'>
+            {% else %}
+                <li >
+            {% endif %}
+            <a href="#tab_clients" data-toggle="tab">Clients</a></li>
+            {% if activeTab == 'prospects' %}
+                <li class='active'>
+            {% else %}
+                <li >
+            {% endif %}
+            <a href="#tab_prospects" data-toggle="tab">Prospects</a></li>
+            {% if activeTab == 'invite-a-prospect' %}
+                <li class='active'>
+            {% else %}
+                <li >
+            {% endif %}
+            <a href="#tab_invite_prospect" data-toggle="tab">Invite a Prospect</a></li>
+
+            {% comment %}
+            {#code_v2: NOT DELETE THIS CODE #}
+
+            {#<li><a href="#tab4" data-toggle="tab" class="create-client-lnk"#}
+            {#data-is-can-create-url="{{ path('rx_ria_dashboard_is_can_create_client') }}"#}
+            {#data-url="{{ path('rx_ria_client_create') }}">Create Prospect</a>#}
+            {#</li>#}
+            {% endcomment %}
+        </ul>
+        <div class="tab-content">
+            {% if activeTab == 'clients' %}
+                <div class="tab-pane active" id="tab_clients">
+            {% else %}
+                <div class="tab-pane" id="tab_clients">
+            {% endif %}
+                <div class="ria-client-dashboard-header row padding-bottom-20">
+                {% block clients_header %}
+                    <div id="header"></div>
+                    {% include "ria/dashboard_tpl_clients_header.html" %}
+                {% endblock %}
+                </div>
+                <div id="clients"></div>
+            </div>
+
+            {% if activeTab == 'prospects' %}
+                <div class="tab-pane active" id="tab_prospects">
+            {% else %}
+                <div class="tab-pane" id="tab_prospects">
+            {% endif %}
+                {% load prospects_info %}
+                {{ ria|prospectsInformation }}
+            </div>
+
+            {% if activeTab == 'invite-a-prospect' %}
+                <div class="tab-pane active" id="tab_invite_prospect">
+            {% else %}
+                <div class="tab-pane" id="tab_invite_prospect">
+            {% endif %}
+                <form id="invite_prospect_form" action="{% url 'rx_ria_prospects_invite' %}">
+                    {% csrf_token %}
+                    {% include 'ria/prospects_invite_prospect_form_fields.html' with form=inviteForm %}
+                </form>
+            </div>
+            {% block clients_content %}
+                {% include "ria/dashboard_tpl_clients_table.html" %}
+                {% include "ria/dashboard_tpl_client_view.html" %}
+                {% include "ria/dashboard_tpl_account_view.html" %}
+                {% include "ria/dashboard_tpl_modal_client_settings.html" %}
+                {% include "ria/dashboard_tpl_modal_account_settings.html" %}
+            {% endblock %}
+
+            {#code_v2: NOT DELETE THIS CODE #}
+
+            {#<div class="tab-pane" id="tab4">#}
+            {#<div class="progress progress-striped active">#}
+            {#<div class="bar" style="width: 50%;"></div>#}
+            {#</div>#}
+            {#<div class="create-prospect-content">#}
+
+            {#</div>#}
+            {#</div>#}
+        </div>
+    </div>
+{% endblock %}

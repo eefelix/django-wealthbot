@@ -1,11 +1,10 @@
 from django.db import models
-from user.models import User
 from client.models import ClientAccount
 
 class SystemAccount(models.Model):
     class Meta:
     	db_table = 'system_client_accounts'
-    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    client = models.ForeignKey('user.User', on_delete=models.CASCADE)
     client_account = models.OneToOneField(ClientAccount, on_delete=models.CASCADE)
     account_number = models.CharField(max_length=255)
     account_description = models.CharField(max_length=255, blank=True, null=True)

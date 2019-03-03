@@ -1,11 +1,10 @@
 from django.db import models
 from django.utils.text import slugify
-from user.models import User
 
 class CeModel(models.Model):
     class Meta:
     	db_table = 'ce_models'
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    owner = models.ForeignKey('user.User', on_delete=models.CASCADE, blank=True, null=True)
     parent = models.ForeignKey('webo_admin.CeModel', on_delete=models.CASCADE, blank=True, null=True)
     TYPE_STRATEGY = 1
     TYPE_CUSTOM = 2
@@ -70,3 +69,11 @@ class CeModel(models.Model):
 
         return commission
     
+    def hasType(self, type):
+        return self.type == type
+
+    def isStrategy(self):
+        return self.hasType(type=self.TYPE_STRATEGY)
+    
+    def isCustom(self):
+        return self.hasType(type=self.TYPE_CUSTOM)

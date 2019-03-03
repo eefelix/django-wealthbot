@@ -76,16 +76,16 @@ def index(request):
 
 @login_required
 def acceptPortfolio(request):
-	pass
+	return HttpResponse('Not implemented yet, please come back later!')
 
 @login_required
 def consolidatedAccounts(request):
-	pass
+	return HttpResponse('Not implemented yet, please come back later!')
 
 @login_required
 def outsideFunds(request):
-	pass
-
+	return HttpResponse('Not implemented yet, please come back later!')
+	
 # Returns true if array contains ClientAccount objects with sas cache property value
 # more than 0 and false otherwise.
 def containsSasCash(accounts=None):

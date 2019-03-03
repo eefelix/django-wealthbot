@@ -1,5 +1,4 @@
 from django.db import models
-from user.models import User
 
 class CeModelEntity(models.Model):
     class Meta:

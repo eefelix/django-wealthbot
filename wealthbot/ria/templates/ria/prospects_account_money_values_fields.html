@@ -1,0 +1,68 @@
+<div class="form-group">
+    {% if form.value.label is not None %}
+        <label for="{{ form.value.name }}">{{ form.value.label }}</label>
+    {% else %}
+        <label for="{{ form.value.name }}"></label>
+    {% endif %}
+    <div>
+        {{ form.value.errors }}
+        <div class="input-group">
+            <span class="input-group-addon">$</span>
+            <input type="text" id="{{ form.value.id_for_label }}" name="{{ form.value.name }}" required="required" class='auto-numeric light-gray form-control' />
+        </div>
+        {% if group == 'employer_retirement' %}
+            <span class="retirement-value-help" >Minimum value must be $50,000 for retirement plans.</span>
+        {% else %}
+            <span class="retirement-value-help" style="display:none;" }}>Minimum value must be $50,000 for retirement plans.</span>
+        {% endif %}
+    </div>
+</div>
+
+<div class="form-group">
+    {% if form.monthly_contributions.label is not None %}
+        <label for="{{ form.monthly_contributions.name }}">{{ form.monthly_contributions.label }}</label>
+    {% else %}
+        <label for="{{ form.monthly_contributions.name }}"></label>
+    {% endif %}
+    <div>
+        {{ form.monthly_contributions.errors }}
+        <div class="input-group">
+            <span class="input-group-addon">$</span>
+            <input type="text" id={{ form.monthly_contributions.id_for_label }} name={{ form.monthly_contributions.name }} required="required" class='auto-numeric light-gray form-control' />
+        </div>
+    </div>
+</div>
+
+{% if group == 'employer_retirement' %}
+    <div class="form-group monthly-distributions-field" style="display:none;" >
+{% else %}
+    <div class="form-group monthly-distributions-field" >
+{% endif %}
+        {% if form.monthly_distributions.label %}
+            <label for="{{ form.monthly_distributions.name }}">{{ form.monthly_distributions.label }}</label>
+        {% else %}
+            <label for="{{ form.monthly_distributions.name }}"></label>
+        {% endif %}
+        <div>
+            {{ form.monthly_distributions.errors }}
+            <div class="input-group">
+                <span class="input-group-addon">$</span>
+                <input type="text" id={{ form.monthly_distributions.id_for_label }} name={{ form.monthly_distributions.name }} required="required" class='auto-numeric light-gray form-control' />
+            </div>
+        </div>
+    </div>
+
+{% if group == 'employer_retirement' %}
+    <div class="form-group sas-cash-field" style="display:none;" >
+{% else %}
+    <div class="form-group sas-cash-field" >
+{% endif %}
+        <label for="{{ form.sas_cash.name }}">SAS Cash</label>
+        <div>
+            {{ form.sas_cash.errors }}
+            <div class="input-group">
+                <span class="input-group-addon">$</span>
+                <input type="text" id={{ form.sas_cash.id_for_label }} name={{ form.sas_cash.name }} required="required" class='auto-numeric light-gray form-control' />
+            </div>
+        </div>
+    </div>

@@ -3,5 +3,4 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def account(request):
-	pass
-	
+	return HttpResponse('Not implemented yet, please come back later!')	

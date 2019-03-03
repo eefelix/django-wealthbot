@@ -7,3 +7,5 @@ from .accountGroupType import *
 from .clientAccount import *
 from .systemAccount import *
 from .clientPortfolio import *
+from .workflow import *
+from .activity import *

@@ -1,0 +1,15 @@
+{% if activityItem.client_user == activityItem.CLIENT_STATUS_PROSPECT %}
+	<tr>
+	    <td><a href="{% url 'rx_ria_dashboard_clients' tab='prospects' %}">{{ activityItem.last_name }}, {{ 	activityItem.first_name }}</a></td>
+	    <td>{{ activityItem.created_at|date:'m/d/y' }}</td>
+	    <td><a href="{% url 'rx_ria_dashboard_clients' tab='prospects' %}">{{ activityItem.message }}</a></td>
+	    <td><a class="close delete-activity-summary" href="{% url 'rx_ria_workflow_activity_summary_delete' id=activityItem.id %}">×</a>	</td>
+	</tr>
+{% else %}
+	<tr>
+	    <td><a href="{% url 'rx_ria_dashboard_show_client' client_id=activityItem.client_user.id %}">{{ activityItem.last_name }}, {{ 	activityItem.first_name }}</a></td>
+	    <td>{{ activityItem.created_at|date:'m/d/y' }}</td>
+	    <td><a href="{% url 'rx_ria_dashboard_show_client' client_id=activityItem.client_user.id %}">{{ activityItem.message }}</a></td>
+	    <td><a class="close delete-activity-summary" href="{% url 'rx_ria_workflow_activity_summary_delete' id=activityItem.id %}">×</a>	</td>
+	</tr>
+{% endif %}

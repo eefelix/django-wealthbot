@@ -1,10 +1,9 @@
 from django.db import models
-from user.models import User
 
 class RiskQuestion(models.Model):
     class Meta:
     	db_table = 'risk_questions'
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey('user.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     is_withdraw_age_input = models.BooleanField()

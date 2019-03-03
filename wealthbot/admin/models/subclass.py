@@ -1,11 +1,10 @@
 from django.db import models
-from user.models import User
 
 class Subclass(models.Model):
     class Meta:
     	db_table = 'subclasses'
     asset_class = models.ForeignKey('webo_admin.AssetClass', on_delete=models.CASCADE, related_name='subclasses')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    owner = models.ForeignKey('user.User', on_delete=models.CASCADE, blank=True, null=True)
     source = models.ForeignKey('webo_admin.Subclass', on_delete=models.CASCADE, related_name='targets', blank=True, null=True)
     name = models.CharField(max_length=255)
     expected_performance = models.FloatField()

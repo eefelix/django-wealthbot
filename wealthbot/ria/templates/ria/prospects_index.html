@@ -1,0 +1,87 @@
+<form id="delete_clients_batch_form" action="{% url 'rx_ria_prospects_delete' %}" method="post">
+    {% csrf_token %}
+    <table class="table table-striped prospects">
+        <thead>
+        {% comment "Skip implementing sorting at this moment" %}
+        {% set sort = (app.request.query.get('sort') in ['value', 'group', 'step']) ? app.request.query.get('sort') : 'name' %}
+        {% set order = app.request.query.get('order') == 'desc' ? 'asc' : 'desc' %}
+        {% set icon_direction = app.request.query.get('order') == 'desc' ? 'down' : 'up' %}
+        {% endcomment %}
+
+        <tr>
+            <th>
+                <a href="{% url 'rx_ria_prospects' sort='name' order='desc' %}">
+                    <i class="icon-chevron-down"></i> Prospect
+                    Name
+                </a>
+            </th>
+            <th>
+                <a href="{% url 'rx_ria_prospects' sort='value' order='desc' %}">
+                    <i class="icon-chevron-down"></i> Portfolio
+                    Value
+                </a>
+            </th>
+            <th>
+                <a href="{% url 'rx_ria_prospects' sort='group' order='desc' %}">
+                    <i class="icon-chevron-down"></i> Group
+                </a>
+            </th>
+            <th>
+                <a href="{% url 'rx_ria_prospects' sort='step' order='desc' %}">
+                    <i class="icon-chevron-down"></i> Current
+                    Step
+                </a>
+            </th>
+            <th>Last Login</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if clients_data|length > 0 %}
+            {% for item in clients_data %}
+                <tr>
+                    <td>
+                        <label class="checkbox">
+                            <input type="checkbox" class="delete-client-batch-checkbox" name="clients_ids[]" value="{{ item.client.id }}"/>
+
+                            {% if item.client.profile.registration_step >= 3 %}
+                                <a href="{% url 'rx_ria_prospect_portfolio' client_id=item.client.id %}" class="show-prospect-btn">
+                                    {{ item.client.profile.last_name }}, {{ item.client.profile.first_name }}
+                                </a>
+                            {% else %}
+                                {{ item.client.profile.last_name }}, {{ item.client.profile.first_name }} -
+                                No Portfolio Suggested
+                            {% endif %}
+                        </label>
+                    </td>
+                    {% load humanize %}
+                    <td>${{ item.value_sum|floatformat:2|intcomma }}</td>
+                    <td>{{ item.client.getGroupsAsString | capfirst }}</td>
+                    <td>
+                        {% if item.client.profile.registration_step >= 3 %}
+                            {{ item.client.profile.clientRegistrationStep }}
+                        {% else %}
+                            <a target="_blank" href="{% url 'rx_ria_login_as_client' username=item.client.username %}">
+                                {{ item.client.profile.clientRegistrationStep }}
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.client.last_login is not None %}
+                            {{ item.client.last_login|date:'m/d/Y - H:i' }}
+                        {% else %}
+                            Never
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5">No prospects.</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    <input class="btn btn-default"  type="submit" name="Delete" value="Delete"/>
+    <span class="help-inline">Delete Selected Prospect</span>
+</form>

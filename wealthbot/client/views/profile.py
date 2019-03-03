@@ -58,6 +58,7 @@ def stepOne(request):
 				user.removeAdditionalContact(spouse)
 
 			# Set Client registration step to 1
+			# print('Set Client registration step to 1')
 			profile.registration_step = 1
 
 			profile.save()
@@ -324,7 +325,7 @@ def updateAccountForm(request, group):
 	return JsonResponse(data)
 
 def stepThreeBack(request):
-	pass
+	return HttpResponse('Not implemented yet, please come back later!')
 
 def completeStepThree(request):
 	# Get the user object
@@ -387,14 +388,14 @@ def showAccountsTable(request):
 	return render(request, 'client/profile_accounts_list.html', context)
 
 def showSuccessMessage(request):
-	pass
+	return HttpResponse('Not implemented yet, please come back later!')
 
 def editAccount(request, id):
-	pass
+	return HttpResponse('Not implemented yet, please come back later!')
 
 def deleteAccount(request, id):
-	pass
-	
+	return HttpResponse('Not implemented yet, please come back later!')
+
 def processAccountForm(request):
 	template = loader.get_template('client/profile_create_account_success.html')
 	context = {}
@@ -408,7 +409,7 @@ def processAccountForm(request):
 	return data
 
 def processEmployerRetirementAccountForm(account):
-	pass
+	return HttpResponse('Not implemented yet, please come back later!')
 
 # Save account group in the session.
 def setAccountGroup(session, group):
@@ -499,7 +500,7 @@ def getAccountFormByGroup(request, group):
 	return content
 
 def getAccountOwnerFormView(user, isJoint):
-	pass
+	return HttpResponse('Not implemented yet, please come back later!')
 
 def getTitleMessageForAccountForm(session, group, groupType=None):
 	message = ''

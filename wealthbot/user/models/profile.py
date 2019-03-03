@@ -1,12 +1,13 @@
 from django.db import models
 from django.core.exceptions import PermissionDenied
-from .user import User
+from django.http import Http404
+from client.models import ClientAdditionalContact
 
 class Profile(models.Model):
     class Meta:
     	db_table = 'user_profiles'
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    ria_user = models.ForeignKey(User, related_name='ria', on_delete=models.CASCADE)
+    user = models.OneToOneField('user.User', on_delete=models.CASCADE)
+    ria_user = models.ForeignKey('user.User', related_name='ria', on_delete=models.CASCADE, blank=True, null=True)
     registration_step = models.IntegerField(default=0)
     company = models.CharField(max_length=255, blank=True, null=True)
     first_name = models.CharField(max_length=255)
@@ -91,7 +92,13 @@ class Profile(models.Model):
         (CLIENT_SOURCE_IN_HOUSE, 'in-house'),
     )
     client_source = models.CharField(choices=CLIENT_SOURCE_CHOICES, max_length=10, blank=True, null=True)
-    client_account_managed = models.SmallIntegerField(default=0, blank=True, null=True)
+    CLIENT_ACCOUNT_MANAGED_ACCOUNT = 1
+    CLIENT_ACCOUNT_MANAGED_HOUSEHOLDER = 2
+    CLIENT_ACCOUNT_MANAGED_CHOICES = (
+        (CLIENT_ACCOUNT_MANAGED_ACCOUNT, 'Account Level'),
+        (CLIENT_ACCOUNT_MANAGED_HOUSEHOLDER, 'Householder Level'),
+    )
+    client_account_managed = models.SmallIntegerField(choices=CLIENT_ACCOUNT_MANAGED_CHOICES, blank=True, null=True)
     CLIENT_STATUS_PROSPECT = 1
     CLIENT_STATUS_CLIENT = 2
     CLIENT_STATUS_CHOICES = (
@@ -108,7 +115,7 @@ class Profile(models.Model):
     paymentMethod = models.IntegerField(choices=PAYMENT_METHOD_CHOICES, default=0, blank=True, null=True)
 
     def __str__(self):
-    	return self.user.username
+    	return str(self.pk) + ": " + self.user.username
 
     # Returns true if user is client with marital_status = 
     # CLIENT_MARITAL_STATUS_MARRIED and false otherwise.
@@ -122,3 +129,98 @@ class Profile(models.Model):
             return True
 
         return False
+
+    clientRegistrationSteps = [
+        'Created Login',
+        'Risk questionnaire',
+        'Information Intake',
+        'Suggested Portfolio',
+        'Advisor Approved Portfolio',
+        'Approved Portfolio',
+        'Application Screen',
+        'Completed All Applications',
+    ]
+
+    def clientRegistrationStep(self):
+        return self.clientRegistrationSteps[self.registration_step]
+
+    # Get last_name
+    def lastName(self):
+        return self.last_name
+
+    # Get first_name
+    def firstName(self):
+        return self.first_name
+
+    # Get middle_name
+    def middleName(self):
+        return self.middle_name
+
+    # Get birth_date
+    def birthDate(self):
+        return self.birth_date
+
+    # Get marital_status
+    def maritalStatus(self):
+        return self.marital_status
+
+    # Get spouse_first_name
+    def spouseFirstName(self):
+        for contact in self.user.clientadditionalcontact_set.all():
+            if contact.type == ClientAdditionalContact.TYPE_SPOUSE:
+                return contact.spouse_first_name
+        return
+
+    # Get spouse_middle_name
+    def spouseMiddleName(self):
+        for contact in self.user.clientadditionalcontact_set.all():
+            if contact.type == ClientAdditionalContact.TYPE_SPOUSE:
+                return contact.spouse_middle_name
+        return
+
+    # Get spouse_last_name
+    def spouseLastName(self):
+        for contact in self.user.clientadditionalcontact_set.all():
+            if contact.type == ClientAdditionalContact.TYPE_SPOUSE:
+                return contact.spouse_last_name
+        return
+
+    # Get spouse_birth_date
+    def spouseBirthDate(self):
+        for contact in self.user.clientadditionalcontact_set.all():
+            if contact.type == ClientAdditionalContact.TYPE_SPOUSE:
+                return contact.spouse_birth_date
+        return
+
+    # Get phone_number
+    def phoneNumber(self):
+        return self.phone_number
+
+    # Get employment_type
+    def employmentType(self):
+        return self.employment_type
+
+    # Get annual_income
+    def annualIncome(self):
+        return self.annual_income
+
+    # Get liquid_net_worth
+    def liquidNetWorth(self):
+        return self.liquid_net_worth
+
+    # Get estimated_income_tax in percent format
+    def estimatedIncomeTaxPercent(self):
+        return "{0:.0%}".format(float(self.estimated_income_tax))
+
+    # Get client_account_managed as string.
+    def clientAccountManagedAsString(self):
+        level = self.client_account_managed
+        if level is None:
+            self.ria_user.riacompanyinformation.getAccountManagementAsString()
+
+        for choice in self.CLIENT_ACCOUNT_MANAGED_CHOICES:
+            if choice[0] == level:
+                return choice[1].lower()
+
+        raise Http404("Value of client account managed for key : %d doesn't exist." % level)
+        return

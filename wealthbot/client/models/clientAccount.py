@@ -1,11 +1,11 @@
 from django.db import models
-from user.models import User
+from django.db.models import Q
 from client.models import AccountGroupType, AccountGroup
 
 class ClientAccount(models.Model):
     class Meta:
     	db_table = 'client_accounts'
-    client = models.ForeignKey(User, on_delete=models.CASCADE, related_name='clientAccounts')
+    client = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='clientAccounts')
     groupType = models.ForeignKey(AccountGroupType, on_delete=models.CASCADE)
     financial_institution = models.CharField(max_length=255, blank=True, null=True)
     value = models.FloatField()
@@ -14,8 +14,10 @@ class ClientAccount(models.Model):
     sas_cash = models.FloatField(blank=True, null=True)
     process_step = models.IntegerField(default=0)
     step_action = models.CharField(max_length=255, blank=True, null=True)
-    is_pre_saved = models.BooleanField()
+    is_pre_saved = models.BooleanField(default=False)
     system_type = models.IntegerField(default=1)
+    consolidator = models.ForeignKey('client.ClientAccount', on_delete=models.CASCADE, blank=True, null=True, related_name='consolidatedAccounts')
+    unconsolidated = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.pk) + ": " + self.client.username
@@ -73,3 +75,61 @@ class ClientAccount(models.Model):
                 result['sas_cash'] += account.sas_cash
 
         return result
+
+    @classmethod
+    def findConsolidatedAccountsByClient(cls, client):
+        return ClientAccount.objects.filter(
+            Q(client=client) &
+            (
+                Q(unconsolidated=True)|
+                Q(consolidator=None)
+            )
+        )
+
+    @classmethod
+    def hasRetirementAccount(cls, client):
+        retirementAccounts = cls.getRetirementAccountsByClient(client=client)
+
+        if retirementAccounts.count() > 0:
+            return True
+        else:
+            return False
+
+    @classmethod
+    def getRetirementAccountsByClient(cls, client):
+        retirementAccounts = cls.findByClientAndGroup(client=client, 
+            group=AccountGroup.GROUP_EMPLOYER_RETIREMENT)
+
+        return retirementAccounts
+
+    @classmethod
+    def findByClientAndGroup(cls, client, group):
+        selected_group = AccountGroup.objects.get(name=group)
+        selected_groupType = AccountGroupType.objects.filter(group=selected_group)
+        return ClientAccount.objects.filter(client=client,
+            groupType__in=selected_groupType)
+
+    # Get name of group of account.
+    def getGroupName(self):
+        groupType = self.groupType
+
+        if groupType is None:
+            groupName = None
+        else:
+            if groupType.group is None:
+                groupName = None
+            else:
+                groupName = groupType.group.name
+
+        return groupName
+
+    # Get unconsolidated.
+    def getUnconsolidated(self):
+        return unconsolidated
+
+    # Get consolidator_id.
+    def getConsolidatorId(self):
+        if self.consolidator is not None:
+            return self.consolidator.pk
+        else:
+            return None

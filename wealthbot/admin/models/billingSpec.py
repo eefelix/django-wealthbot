@@ -1,10 +1,9 @@
 from django.db import models
-from user.models import User
 
 class BillingSpec(models.Model):
     class Meta:
     	db_table = 'billing_spec'
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    owner = models.ForeignKey('user.User', on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=255)
     master = models.BooleanField(default=True)
     TYPE_TIER = 1

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            {% block title %}
+            wealthbot.io
+            {% endblock %}
+        </title>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+        <link rel="stylesheet" href="{% static '/css/styles.css'  %}">
+        <link rel="stylesheet" href="{% static '/css/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static '/css/bootstrap-theme.css' %}">
+        <link id="base-style" rel="stylesheet" href="{% static '/css/theme-css/style.css' %}">
+
+        {% comment %}
+        {% block stylesheets %}
+            {% stylesheets
+                'bundles/user/css/*'
+                'bundles/wealthbotria/css/*'
+                filter='cssrewrite'
+            %}
+                <link rel="stylesheet" href="{{ asset_url }}">
+            {% endstylesheets %}
+        {% endblock %}
+        {% endcomment %}
+
+        <link rel="shortcut icon" href="{% static 'img/favicon.ico'  %}" />
+
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+
+        {% block javascripts %}
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script type="text/javascript" src="{% static '/js/jquery.form.js'  %}"></script>
+            <script type="text/javascript" src="{% static '/js/jquery.autoNumeric.js'  %}"></script>
+            <script type="text/javascript" src="{% static '/js/jquery.placeholder.min.js'  %}"></script>
+            <script type="text/javascript" src="{% static '/js/custom.js'  %}"></script>
+            <script type="text/javascript" src="{% static '/js/bootstrap.min.js'  %}"></script>
+            <script type="text/javascript" src="{% static '/js/typeahead.js'  %}"></script>
+            <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        {% endblock %}
+    </body>
+</html>

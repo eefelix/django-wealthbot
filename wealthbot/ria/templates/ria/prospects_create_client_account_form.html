@@ -1,0 +1,39 @@
+<form id="create_client_account_form" action="{% url 'rx_ria_prospect_create_client_account' client_id=client.id %}" method="post"
+      data-update-url="{% url 'rx_ria_prospect_update_client_account_form' client_id=client.id %}"
+      data-update-owners-url="{% url 'rx_ria_prospect_update_client_account_owners_form' client_id=client.id %}" class="form-horizontal">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="{{ form.group.name }}">Activity</label>
+        <div>
+            <select id={{ form.group.id_for_label }} name={{ form.group.name }} required="required" class="form-control">
+                {% for choice in form.group %}
+                    {{ choice.tag }}
+                {% endfor %}
+            </select>
+            {{ form.group.errors }}
+        </div>
+    </div>
+
+    <div class="advanced-fields">
+        {% include 'ria/prospects_account_form_fields.html' with form=form %}
+    </div>
+
+    <div class="form-group">
+        {{ form.consolidate.errors }}
+        <div>
+            <label for="{{ form.consolidate.name }}">
+                {{ form.consolidate }}
+                Consolidate
+            </label>
+        </div>
+    </div>
+
+    <div class="account-owners-fields">
+        {% include 'ria/prospects_account_owners_fields.html' with form=form %}
+    </div>
+
+    {% include 'ria/prospects_account_money_values_fields.html' with form=form group=None %}
+
+    <input class="btn btn-default"  type="submit" name="submit" value="Add" />
+</form>

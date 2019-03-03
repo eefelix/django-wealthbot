@@ -1,0 +1,242 @@
+{% extends parent_template %}
+
+{% block javascripts %}
+    {{ block.super }}
+    {% load staticfiles %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.min.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.pie.min.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.stack.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.resize.min.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.tooltip.min.js' %}"></script>
+    <script src="{% static '/js/theme-js/jquery.flot.crosshair.js' %}"></script>
+
+    <script src="{% static 'ria/js/ria.model.chart.js' %}"></script>
+    <script src="{% static 'ria/js/ria.suggestedPortfolio.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+
+    {% block ria_nav %}
+        {% if not is_client_view %}
+            <!-- start: RIA  nav/menu -->
+            {% include 'ria/menu_nav.html' with ria=user %}
+            <!-- end: RIA nav/menu -->
+        {% endif %}
+    {% endblock %}
+
+    <h3>Suggested Portfolio for: {{ client.profile.lastName }}, {{ client.profile.firstName }}</h3>
+
+    <div class="client-information">
+        <a class="toggle-client-information-btn" href="javascript:void(0)">View Client Information</a>
+        <div class="information-table" style="display:none;">
+            <table class="table table-striped shadow">
+                <tr>
+                    <th>Client:</th>
+                    <td>{{ client.profile.firstName }}</td>
+                    {% if client.profile.middleName is not None %}
+                        <td>{{ client.profile.middleName }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    <td>{{ client.profile.lastName }}</td>
+                    <td>{{ client.profile.birthDate | date:"m/d/Y" }}</td>
+                    <td>{{ client.profile.maritalStatus }}</td>
+                </tr>
+                {% if client.profile.maritalStatus == 'Married' %}
+                    <tr>
+                        <th>Spouse:</th>
+                        <td>{{ client.profile.spouseFirstName }}</td>
+                        {% if client.profile.spouseMiddleName is not None %}
+                            <td>{{ client.profile.spouseMiddleName }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>{{ client.profile.spouseLastName }}</td>
+                        <td>{{ client.profile.spouseBirthDate | date:"m/d/Y" }}</td>
+                        <td></td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Contact Information:</th>
+                    <td>{{ client.profile.street }}</td>
+                    <td>{{ client.profile.city }}</td>
+                    {% comment "Skip implementing state info at this moment" %}
+                    <td>{{ client.profile.state ? client.profile.state.name : '' }}</td>
+                    {% endcomment %}
+                    <td>
+                    </td>
+                    <td>{{ client.profile.zip }}</td>
+                    <td>
+                        {% load phone_format %}
+                        {{ client.profile.phoneNumber|phone_number }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Demographic Information:</th>
+                    <td>{{ client.profile.employmentType }}</td>
+                    <td>Annual Income: {{ client.profile.annualIncome }}</td>
+                    <td>Net Worth: {{ client.profile.liquidNetWorth }}</td>
+                    <td>Tax Bracket: {{ client.profile.estimatedIncomeTaxPercent }}</td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="client-risk-answers">
+        <a class="toggle-risk-answers-btn" href="javascript:void(0)">View Client Risk Answers</a>
+        <div class="answers-table" style="display:none;">
+            <table class="table table-striped shadow">
+                <tr>
+                    <th>Question</th>
+                    <th>Answer</th>
+                </tr>
+                {% for client_answer in client_answers.all %}
+                    <tr>
+                        <td>{{ forloop.counter }}. {{ client_answer.question.title }}</td>
+                        <td>{{ client_answer.answer.title }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    {% if not is_client_view %}
+        <div class="clearfix">
+            <a target="_blank" class="pull-right" href="{% url 'rx_ria_prospect_portfolio_client_view' client_id=client.id %}">Client View</a>
+        </div>
+    {% endif %}
+
+    {% if is_client_view %}
+        <form id="client_settings_form" class="form-horizontal" style="padding: 20px 20px" action="{% url 'rx_ria_prospect_portfolio_client_view' client_id=client.id %}" method="post">
+    {% else %}
+        <form id="client_settings_form" class="form-horizontal" style="padding: 20px 20px" action="{% url 'rx_ria_prospect_portfolio' client_id=client.id %}" method="post">
+    {% endif %}
+        {% csrf_token %}
+
+        {% if settings_form.errors %}
+            {% for field in settings_form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in settings_form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if client_has_final_portfolio %}
+            {% if ria_company_information.isClientByClientManagedLevel %}
+                <div class="alert alert-info">
+                    <strong>Asset Location:</strong>
+                    The client's portfolio will be rebalanced at the {{ client.profile.clientAccountManagedAsString|capfirst }}.
+                </div>
+            {% endif %}
+
+            {% if settings_form.client_account_managed is not None %}
+                {% if ria_company_information.isClientByClientManagedLevel %}
+                    <div class="form-group">
+                        <strong>Portfolio Management Level:</strong>
+                        <div>
+                            {{ settings_form.client_account_managed.errors }}
+                            {{ settings_form.client_account_managed }}
+                        </div>
+                    </div>
+                {% else %}
+                    {{ settings_form.client_account_managed }}
+                {% endif %}
+            {% endif %}
+
+        {% else %}
+
+            <div class="form-group">
+                <strong>Choose another portfolio:</strong>
+                <div>
+                    {{ settings_form.client_portfolio.errors }}
+                    {{ settings_form.client_portfolio }}
+                </div>
+            </div>
+
+            {% if settings_form.client_account_managed is not None %}
+                {% if ria_company_information.isClientByClientManagedLevel %}
+                    <div class="form-group">
+                        <strong>Portfolio Management Level:</strong>
+                        <div>
+                            {{ settings_form.client_account_managed.errors }}
+                            {{ settings_form.client_account_managed }}
+                        </div>
+                    </div>
+                {% else %}
+                    {{ settings_form.client_account_managed }}
+                {% endif %}
+            {% endif %}
+
+            <div class="form-group">
+                <strong>Group:</strong>
+                <div>
+                    {{ settings_form.groups.errors }}
+                    {{ settings_form.groups }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <strong>Choose another billing spec:</strong>
+                <div>
+                    {{ settings_form.billingSpec.errors }}
+                    {{ settings_form.billingSpec }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <strong>Payment method:</strong>
+                <div>
+                    {{ settings_form.paymentMethod.errors }}
+                    {{ settings_form.paymentMethod }}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if is_use_qualified_models %}
+            <div align="center">
+                {% if is_client_view %}
+                    <a class="qualified-toggle" data-value="1" href="{% url 'rx_ria_prospect_portfolio_client_view' is_qualified=1 client_id=client.id %}" class="qualified">Qualified</a>
+                    &nbsp;|&nbsp;
+                    <a class="qualified-toggle" data-value="0" href="{% url 'rx_ria_prospect_portfolio_client_view' is_qualified=0 client_id=client.id %}">Non-Qualified</a>
+                {% else %}
+                    <a class="qualified-toggle" data-value="1" href="{% url 'rx_ria_prospect_portfolio' is_qualified=1 client_id=client.id %}" class="qualified">Qualified</a>
+                    &nbsp;|&nbsp;
+                    <a class="qualified-toggle" data-value="0" href="{% url 'rx_ria_prospect_portfolio' is_qualified=0 client_id=client.id %}">Non-Qualified</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% include 'client/portfolio_portfolio.html' with portfolio_information=portfolio_information ria_company_information=ria_company_information has_retirement_account=has_retirement_account client=client action=action %}
+
+        {% include 'ria/prospects_client_account_list.html' with client=client total=total client_accounts=client_accounts %}
+
+        {{ settings_form.action_type }}
+        {{ settings_form.is_qualified }}
+
+    </form>
+
+    <br/><br/>
+
+    {% if not client.hasApprovedPortfolio %}
+        <div class="client-account-form" style="padding:20px 20px">
+            {% include 'ria/prospects_create_client_account_form.html' with form=form client=client %}
+        </div>
+    {% endif %}
+
+    {% if not client_has_final_portfolio %}
+        <div class="form-actions">
+            <button type="button" class="update-prospect-btn btn">Update</button>
+            <input class="submit-final-portfolio-btn btn btn-info" type="submit" value="Submit Final Portfolio" />
+        </div>
+    {% endif %}
+
+{% endblock %}

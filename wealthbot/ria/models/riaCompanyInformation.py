@@ -1,11 +1,10 @@
 from django.db import models
-from user.models import User
 from admin.models import CeModel
 
 class RiaCompanyInformation(models.Model):
     class Meta:
     	db_table = 'ria_company_information'
-    ria_user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ria_user = models.OneToOneField('user.User', on_delete=models.CASCADE)
     name = models.CharField(max_length=255, blank=True, null=True)
     primary_first_name = models.CharField(max_length=255, blank=True, null=True)
     primary_last_name = models.CharField(max_length=255, blank=True, null=True)
@@ -19,7 +18,17 @@ class RiaCompanyInformation(models.Model):
     fax_number = models.CharField(max_length=25, blank=True, null=True)
     contact_email = models.CharField(max_length=255, blank=True, null=True)
     logo = models.CharField(max_length=255, blank=True, null=True)
-    account_managed = models.IntegerField(blank=True, null=True)
+    # constants for $account_managed
+    ACCOUNT_MANAGED_ACCOUNT = 1
+    ACCOUNT_MANAGED_HOUSEHOLD = 2
+    ACCOUNT_MANAGED_ACCOUNT_OR_HOUSEHOLD = 3
+    ACCOUNT_MANAGED_CHOICES = (
+        (ACCOUNT_MANAGED_ACCOUNT, 'Account Level'),
+        (ACCOUNT_MANAGED_HOUSEHOLD, 'Household Level'),
+        (ACCOUNT_MANAGED_ACCOUNT_OR_HOUSEHOLD, 'Account or Household Level'),
+    )
+    account_managed = models.IntegerField(choices=ACCOUNT_MANAGED_CHOICES, blank=True,
+        null=True)
     is_allow_retirement_plan = models.BooleanField(blank=True, null=True)
     minimum_billing_fee = models.FloatField(blank=True, null=True)
     is_show_client_expected_asset_class = models.BooleanField(default=True)
@@ -46,7 +55,15 @@ class RiaCompanyInformation(models.Model):
     tax_loss_harvesting_minimum_percent = models.FloatField(blank=True, null=True)
     tlh_buy_back_original = models.BooleanField(default=False)
     is_use_qualified_models = models.BooleanField(default=False)
-    portfolio_processing = models.IntegerField(blank=True, null=True)
+    # Enumerate portfolio processing choices
+    PORTFOLIO_PROCESSING_STRAIGHT_THROUGH = 1
+    PORTFOLIO_PROCESSING_COLLABORATIVE = 2
+    PORTFOLIO_PROCESSING_CHOICES = (
+        (PORTFOLIO_PROCESSING_STRAIGHT_THROUGH, 'Straight-Through'),
+        (PORTFOLIO_PROCESSING_COLLABORATIVE, 'Collaborative'),
+    )
+    portfolio_processing = models.IntegerField(choices=PORTFOLIO_PROCESSING_CHOICES,
+        blank=True, null=True)
     allow_non_electronically_signing = models.BooleanField(blank=True, null=True)
     stop_tlh_value = models.FloatField(blank=True, null=True)
     RELATIONSHIP_TYPE_LICENSE_FEE = 0
@@ -60,3 +77,28 @@ class RiaCompanyInformation(models.Model):
 
     def __str__(self):
     	return self.name
+
+    def isClientByClientManagedLevel(self):
+        if self.account_managed == self.ACCOUNT_MANAGED_ACCOUNT_OR_HOUSEHOLD:
+            return True
+        else:
+            return False
+
+    def isCollaborativeProcessing(self):
+        if self.portfolio_processing == self.PORTFOLIO_PROCESSING_COLLABORATIVE:
+            return True
+        else:
+            return False
+
+    def isUseQualifiedModels(self):
+        if self.account_managed == self.ACCOUNT_MANAGED_ACCOUNT and self.is_use_qualified_models:
+            return True
+        else:
+            return False
+
+    def getAccountManagementAsString(self):
+        for choice in self.ACCOUNT_MANAGED_CHOICES:
+            if choice[0] == self.account_managed:
+                return choice[1]
+
+        return

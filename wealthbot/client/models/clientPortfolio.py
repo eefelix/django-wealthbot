@@ -1,11 +1,10 @@
 from django.db import models
-from user.models import User
 from admin.models import CeModel
 
 class ClientPortfolio(models.Model):
     class Meta:
     	db_table = 'client_portfolio'
-    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    client = models.ForeignKey('user.User', on_delete=models.CASCADE)
     portfolio = models.ForeignKey(CeModel, on_delete=models.CASCADE)
     # ENUM values status column
     STATUS_PROPOSED = 'proposed'
@@ -32,3 +31,8 @@ class ClientPortfolio(models.Model):
     # Is advisor approved portfolio.
     def isAdvisorApproved(self):
         return (self.status == self.STATUS_ADVISOR_APPROVED)
+
+    # Is client accepted portfolio.
+    def isClientAccepted(self):
+        return (self.status == self.STATUS_CLIENT_ACCEPTED)
+    

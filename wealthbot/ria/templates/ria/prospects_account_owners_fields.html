@@ -1,0 +1,27 @@
+{% if form.owners is not None %}
+    <div class="form-group">
+        <label for="{{ form.owners.name }}">Who is this account for?</label>
+        {{ form.owners.errors }}
+
+        <div>
+            {{ form.owners.owner_types.errors }}
+            {% for field in form.owners.owner_types %}
+                <label class="radio" for="{{ field.id_for_label }}">
+                    {% if field.data.value == 'other' %}
+                        <input type="radio" id={{ field.id_for_label }} name={{ field.name }} value={{ field.data.value }} class='other-contact-owner'  />
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+
+                    {{ field.choice_label }}
+                </label>
+            {% endfor %}
+        </div>
+
+        {% if form.owners.other_contact is not None %}
+            <div class="other-owner-fields">
+                {% include 'ria/prospects_other_account_owner_fields.html' with form=form %}
+            </div>
+        {% endif %}
+    </div>
+{% endif %}

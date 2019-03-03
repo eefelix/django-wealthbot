@@ -1,10 +1,9 @@
 from django.db import models
-from user.models import User
 
 class ClientAdditionalContact(models.Model):
     class Meta:
     	db_table = 'client_additional_contacts'
-    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    client = models.ForeignKey('user.User', on_delete=models.CASCADE)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     middle_name = models.CharField(max_length=255, blank=True, null=True)

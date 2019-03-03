@@ -1,0 +1,91 @@
+<div class="navbar-collapse">
+    <!-- .nav, .navbar-search, .navbar-form, etc -->
+    <ul class="nav navbar-nav">
+        {% if route == 'rx_ria_dashboard' %}
+            <li class="active">
+        {% else %}
+            <li >
+        {% endif %}
+        <a href="{% url 'rx_ria_dashboard' %}">Dashboard</a></li>
+        {% if route == 'rx_ria_workflow' %}
+            <li class="active">
+        {% else %}
+            <li >
+        {% endif %}
+        <a href="{% url 'rx_ria_workflow' %}">Workflow</a></li>
+        {% if route == 'rx_ria_dashboard_clients' %}
+            <li class="active">
+        {% else %}
+            <li >
+        {% endif %}
+        <a href="{% url 'rx_ria_dashboard_clients' %}">Clients</a></li>
+        {% if riaCompanyInformation.portfolio_model.isCustom %}
+            {% if route == 'rx_ria_dashboard_models_tab' %}
+                <li class="active">
+            {% else %}
+                <li >
+            {% endif %}
+            <a href="{% url 'rx_ria_dashboard_models_tab' tab='categories' %}">Portfolios</a></li>
+        {% else %}
+            {% if route == 'rx_ria_models' %}
+                <li class="active">
+            {% else %}
+                <li >
+            {% endif %}
+            <a href="{% url 'rx_ria_models' %}">Models</a></li>
+        {% endif %}
+        {% if route == 'rx_ria_billing' %}
+            <li class="active">
+        {% else %}
+            <li >
+        {% endif %}
+        <a href="{% url 'rx_ria_billing' %}">Billing</a></li>
+        {#<li {{ route == 'rx_ria_prospects' ? 'class="active"' : '' }}><a href="{{ path('rx_ria_prospects') }}">Prospects</a></li>#}
+        {% if riaCompanyInformation.relationship_type == riaCompanyInformation.RELATIONSHIP_TYPE_LICENSE_FEE %}
+            {% if route == 'rx_ria_dashboard_rebalancing' %}
+                <li class="active">
+            {% else %}
+                <li >
+            {% endif %}
+            <a href="{% url 'rx_ria_dashboard_rebalancing' %}">Rebalancing</a></li>
+        {% endif %}
+        {% if route == 'rx_ria_risk_profiling' %}
+            <li class="active">
+        {% else %}
+            <li >
+        {% endif %}
+        <a href="{% url 'rx_ria_risk_profiling' %}">Proposals</a></li>
+    </ul>
+
+    <ul class="nav navbar-nav pull-right">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ riaCompanyInformation.ria_user.profile.first_name }} <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li></li>
+                {% comment "Skip implementing RIA role check at this moment" %}
+                {% if (is_granted('ROLE_RIA_ADMIN')) %}
+                    <li><a href="{{ path('rx_ria_change_profile') }}">Admin Settings</a></li>
+                {% endif %}
+                {% endcomment %}
+                <li><a href="{% url 'rx_ria_change_profile' %}">Admin Settings</a></li>
+
+                <li><a href="{% url 'rx_ria_profile' %}">Profile Management</a></li>
+
+                {% comment "Skip implementing RIA role check at this moment" %}
+                {% if (is_granted('ROLE_RIA_ADMIN')) %}
+                    <li><a href="{{ path('rx_ria_user_management')}}">User Management</a></li>
+                {% endif %}
+                {% endcomment %}
+                <li><a href="{% url 'rx_ria_user_management' %}">User Management</a></li>
+
+                {% comment %}
+                {#<li class="divider"></li>
+                <li><a href="{{path('rx_ria_user_create')}}">Create User</a></li>
+                <li><a href="{{ path('rx_ria_user_reset_internally_password') }}">Reset User's Password</a></li>#}
+                {% endcomment %}
+                <li class="divider"></li>
+                <li><a href="{% url 'fos_user_security_logout' %}">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>

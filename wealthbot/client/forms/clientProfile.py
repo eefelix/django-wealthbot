@@ -80,6 +80,8 @@ class ClientProfileForm(forms.ModelForm):
 
 		self.fields['birth_date'].input_formats = ['%m-%d-%Y',]
 
+		self.fields['birth_date'].required = True
+
 		self.fields['marital_status'].widget.attrs = {
 			'class': 'form-control',
 			'id': 'wealthbot_client_bundle_profile_type_marital_status',

@@ -15,7 +15,7 @@
         {% block table_head_extended %}{% endblock %}
 
         {% block table_head_actions_column %}
-            {% if client.hasApprovedPortfolio %}
+            {% if client.withEdit %}
                 <th></th>
             {% endif %}
         {% endblock %}
@@ -24,7 +24,7 @@
     <tbody class="{% block table_body_class %}client-accounts-list{% endblock %}">
     {% block table_body %}
         {% for account in client_accounts %}
-            {% include 'ria/prospects_client_account_row.html' with client=client account=account index=forloop.counter with_edit=client.hasApprovedPortfolio %}
+            {% include 'ria/prospects_client_account_row.html' with client=client account=account index=forloop.counter with_edit=client.withEdit %}
         {% endfor %}
     {% endblock %}
 
@@ -41,7 +41,7 @@
 
         {% block table_row_extended %}{% endblock %}
 
-        {% if client.hasApprovedPortfolio %}
+        {% if client.withEdit %}
             <td></td>
         {% endif %}
     </tr>

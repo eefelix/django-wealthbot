@@ -1,0 +1,24 @@
+<div>
+    <label for="{{ form.owners.other_contact.name }}">Who is the other person this account is for?</label>
+    {{ form.owners.other_contact.errors }}
+
+    {% with contact = form.owners.other_contact %}
+
+    <div>
+        {{ contact.first_name.errors }}
+        <input type="text" id={{ contact.first_name.id_for_label }} name={{ contact.first_name.name }} class='col-md-2' placeholder='First Name' />
+
+        {{ contact.middle_name.errors }}
+        <input type="text" id={{ contact.middle_name.id_for_label }} name={{ contact.middle_name.name }} class='col-md-2' placeholder='Middle Name' />
+
+        {{ contact.last_name.errors }}
+        <input type="text" id={{ contact.last_name.id_for_label }} name={{ contact.last_name.name }} class='col-md-2' placeholder='Last Name' />
+
+    </div>
+    <div>
+        {{ contact.relationship.errors }}
+        <input type="text" id={{ contact.relationship.id_for_label }} name={{ contact.relationship.name }} class='col-md-2' placeholder='Relationship' />
+    </div>
+
+    {% endwith %}
+</div>
